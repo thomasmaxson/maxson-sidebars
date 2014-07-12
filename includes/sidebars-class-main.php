@@ -663,6 +663,8 @@ class Maxson_Sidebar
 
 	public function styles_and_scripts( $hook )
 	{ 
+		global $wp_version;
+
 		$css_deps = array();
 		$js_deps  = array();
 
@@ -682,6 +684,19 @@ class Maxson_Sidebar
 			$css_deps[] = 'maxson-sidebars-admin';
 
 		} // endif
+
+
+		if( version_compare( $wp_version, '3.7', '<=' ) )
+		{ 
+			wp_register_style( 'maxson-sidebars-admin-legacy', esc_url( $this->assets_css . 'maxson-sidebars-admin-legacy.css' ), $css_deps, $this->version, 'screen' );
+
+			if( wp_style_is( 'maxson-sidebars-admin-admin', 'registered' ) )
+			{ 
+				wp_enqueue_style( 'maxson-sidebars-admin-legacy' );
+
+			} // endif
+		} // endif
+
 
 
 		wp_register_script( 'maxson-sidebars-admin', $this->assets_js . 'maxson-sidebars-admin.js', array( 'jquery' ), false, $this->version );
