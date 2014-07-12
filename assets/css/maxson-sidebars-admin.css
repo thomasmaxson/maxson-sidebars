@@ -1,5 +1,5 @@
 /* --------------------------------------------------
-Sidebar Menu Icon
+Admin Menu Icon
 -------------------------------------------------- */
 
 #adminmenu .icon-sidebar, 
@@ -18,8 +18,11 @@ Sidebar Menu Icon
 
 
 /* --------------------------------------------------
-Maxson Sidebar Meta Box
+Meta Box
 -------------------------------------------------- */
+/* ----------------------------------------
+Fields
+---------------------------------------- */
 
 .maxson-sidebar-meta td { padding: 0;}
 
@@ -33,6 +36,10 @@ Maxson Sidebar Meta Box
 	#postbox-container-1 .maxson-sidebar-meta-field + .maxson-sidebar-meta-field { margin-left: 0;}
 
 
+/* ----------------------------------------
+Insert Sidebar
+---------------------------------------- */
+
 #sidebar-adder h4 { margin: 10px 0;}
 
 #side-sortables .sidebar-add input[type=text] { margin: 0 0 1em;}
@@ -44,12 +51,11 @@ Maxson Sidebar Meta Box
 }
 
 
-
 /* --------------------------------------------------
-Maxson Sidebar Generator
+Generator Form
 -------------------------------------------------- */
 /* ----------------------------------------
-Maxson Sidebar Form
+Form
 ---------------------------------------- */
 
 .maxson-sidebar-form { 
@@ -123,11 +129,16 @@ Maxson Sidebar Form
 
 
 /* ----------------------------------------
-Maxson Widget Helpers
+Helper
 ---------------------------------------- */
 
 .widgets-holder-wrap, 
 .widgets-holder-wrap.sidebar-generated { position: relative;}
+
+
+/* ----------------------------------------
+Buttons
+---------------------------------------- */
 
 .maxson-sidebar-links { 
 	position: absolute;
@@ -175,13 +186,12 @@ Maxson Widget Helpers
 
 	.widgets-holder-wrap:hover .maxson-sidebar-links .maxson-shortcode-sidebar { display: inline-block;}
 
-
 .maxson-sidebar-links .maxson-delete-sidebar { color: #a00;}
 	.maxson-sidebar-links .maxson-delete-sidebar:hover { color: red;}
 
 
 /* --------------------------------------------------
-TinyMCE Sidebar
+TinyMCE
 -------------------------------------------------- */
 
 .mce-maxson-sidebar button span,
