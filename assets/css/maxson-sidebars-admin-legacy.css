@@ -1,0 +1,57 @@
+/* --------------------------------------------------
+Sidebar - Wordpress 3.5, 3.6, and 3.7
+-------------------------------------------------- */
+
+.branch-3-5 #adminmenu li.menu-icon-sidebar .wp-menu-image img, 
+.branch-3-6 #adminmenu li.menu-icon-sidebar .wp-menu-image img, 
+.branch-3-7 #adminmenu li.menu-icon-sidebar .wp-menu-image img { display: none;}
+
+.branch-3-5 #adminmenu li.menu-icon-sidebar div.wp-menu-image, 
+.branch-3-6 #adminmenu li.menu-icon-sidebar div.wp-menu-image, 
+.branch-3-7 #adminmenu li.menu-icon-sidebar div.wp-menu-image { background: url('../images/admin/icon-sidebar-16x16.png') no-repeat left top;}
+	.branch-3-5 .menu-icon-sidebar div.wp-menu-image:before, 
+	.branch-3-6 .menu-icon-sidebar div.wp-menu-image:before, 
+	.branch-3-7 .menu-icon-sidebar div.wp-menu-image:before { display: none;}
+
+.branch-3-5 #adminmenu li.menu-icon-sidebar.current div.wp-menu-image, 
+.branch-3-6 #adminmenu li.menu-icon-sidebar.current div.wp-menu-image, 
+.branch-3-7 #adminmenu li.menu-icon-sidebar.current div.wp-menu-image, 
+.branch-3-5 #adminmenu li.menu-icon-sidebar:hover div.wp-menu-image, 
+.branch-3-6 #adminmenu li.menu-icon-sidebar:hover div.wp-menu-image, 
+.branch-3-7 #adminmenu li.menu-icon-sidebar:hover div.wp-menu-image, 
+.branch-3-5 #adminmenu li.menu-icon-sidebar.wp-has-current-submenu div.wp-menu-image, 
+.branch-3-6 #adminmenu li.menu-icon-sidebar.wp-has-current-submenu div.wp-menu-image, 
+.branch-3-7 #adminmenu li.menu-icon-sidebar.wp-has-current-submenu div.wp-menu-image { background-position: left -28px;}
+
+.branch-3-5 #wpbody .icon32.icon32-posts-sidebar, 
+.branch-3-6 #wpbody .icon32.icon32-posts-sidebar, 
+.branch-3-7 #wpbody .icon32.icon32-posts-sidebar { background: transparent url('../images/admin/icon-sidebar-32x32.png') no-repeat left top;}
+
+.branch-3-5 .icon16.icon-sidebar:before, 
+.branch-3-6 .icon16.icon-sidebar:before, 
+.branch-3-7 .icon16.icon-sidebar:before { display: none;}
+
+
+/* --------------------------------------------------
+Retina Display - Wordpress 3.5, 3.6, and 3.7
+-------------------------------------------------- */
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5) { 
+
+	.branch-3-5 #adminmenu li.menu-icon-sidebar div.wp-menu-image, 
+	.branch-3-6 #adminmenu li.menu-icon-sidebar div.wp-menu-image, 
+	.branch-3-7 #adminmenu li.menu-icon-sidebar div.wp-menu-image { 
+		background-image: url('../images/admin/icon-sidebar-16x16@2x.png');
+		-webkit-background-size: 28px 56px;
+		background-size: 28px 56px;
+	}
+
+	.branch-3-5 #wpbody .icon32.icon32-posts-sidebar, 
+	.branch-3-6 #wpbody .icon32.icon32-posts-sidebar, 
+	.branch-3-7 #wpbody .icon32.icon32-posts-sidebar { 
+		background-image: transparent url('../images/admin/icon-sidebar-32x32@2x.png');
+		-webkit-background-size: 32px 32px;
+		background-size: 32px 32px;
+	}
+
+}
