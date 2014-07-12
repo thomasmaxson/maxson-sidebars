@@ -56,11 +56,11 @@ class Maxson_Sidebar_Settings
 
 
 	/**
-	 * 
+	 * Return post types to exclude from admin checkboxes
 	 *
 	 * @since 		1.0
 	 *
-	 * @return 		void
+	 * @return 		array
 	 */
 
 	public function get_excluded_post_types()
@@ -74,11 +74,11 @@ class Maxson_Sidebar_Settings
 
 
 	/**
-	 * 
+	 * Return taxonomies to exclude from admin checkboxes
 	 *
 	 * @since 		1.0
 	 *
-	 * @return 		void
+	 * @return 		array
 	 */
 
 	public function get_excluded_taxonomies()
@@ -92,11 +92,11 @@ class Maxson_Sidebar_Settings
 
 
 	/**
-	 * 
+	 * Return user roles to exclude from admin checkboxes
 	 *
 	 * @since 		1.0
 	 *
-	 * @return 		void
+	 * @return 		array
 	 */
 
 	public function get_excluded_user_roles()
@@ -119,11 +119,11 @@ class Maxson_Sidebar_Settings
 
 
 	/**
-	 * 
+	 * Display sidebar select meta fields
 	 *
 	 * @since 		1.0
 	 *
-	 * @return 		void
+	 * @return 		string
 	 */
 
 	public function get_sidebar_select_fields( $type )
@@ -480,7 +480,7 @@ class Maxson_Sidebar_Settings
 
 
 	/**
-	 * 
+	 * Sidebar general override callback
 	 * 
 	 * @since 		1.0
 	 * 
