@@ -1,0 +1,192 @@
+/* --------------------------------------------------
+Sidebar Menu Icon
+-------------------------------------------------- */
+
+#adminmenu .icon-sidebar, 
+#adminmenu .menu-icon-sidebar div.wp-menu-image { 
+	float: left;
+	text-align: center;
+	background-image: none;
+}
+	#adminmenu .menu-icon-sidebar div.wp-menu-image img { display: none;}
+
+#adminmenu .icon16.icon-sidebar:before, 
+#adminmenu .menu-icon-sidebar div.wp-menu-image:before { 
+	font-family: 'dashicons';
+	content: "\f333";
+}
+
+
+/* --------------------------------------------------
+Maxson Sidebar Meta Box
+-------------------------------------------------- */
+
+.maxson-sidebar-meta td { padding: 0;}
+
+.maxson-sidebar-meta-field { display: inline-block;}
+	.maxson-sidebar-meta-field + .maxson-sidebar-meta-field { margin-left: 20px;}
+
+#postbox-container-1 .maxson-sidebar-meta-field { 
+	display: block;
+	margin-bottom: 10px;
+}
+	#postbox-container-1 .maxson-sidebar-meta-field + .maxson-sidebar-meta-field { margin-left: 0;}
+
+
+#sidebar-adder h4 { margin: 10px 0;}
+
+#side-sortables .sidebar-add input[type=text] { margin: 0 0 1em;}
+
+.sidebar-add input[type=text] { 
+	width: 100%;
+	max-width: 260px;
+	vertical-align: baseline;
+}
+
+
+
+/* --------------------------------------------------
+Maxson Sidebar Generator
+-------------------------------------------------- */
+/* ----------------------------------------
+Maxson Sidebar Form
+---------------------------------------- */
+
+.maxson-sidebar-form { 
+	padding: 10px 10px 15px;
+	border: 1px solid #e5e5e5;
+	margin: 10px 0 0;
+	text-align: center;
+	background-color: #fff;
+}
+	.branch-3-6 .maxson-sidebar-form, 
+	.branch-3-7 .maxson-sidebar-form { 
+		margin: 0 7px;
+		width: 100%;
+	}
+
+.maxson-sidebar-form .maxson-sidebar-header { 
+	border: none;
+	background: none;
+	cursor: default;
+}
+
+.maxson-sidebar-form .maxson-sidebar-header .maxson-sidebar-title { 
+	padding: 5px 0;
+	margin: 0 0 10px;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.maxson-sidebar-form .maxson-input-field { 
+	position: relative;
+	padding: 5px 8px;
+	width: 90%;
+	text-align: center;
+}
+
+.maxson-sidebar-form .maxson-clear-button { 
+	position: relative;
+	display: none;
+	padding: 0;
+	border: none;
+	margin: 0;
+	width: 0;
+	background-color: transparent;
+	vertical-align: middle;
+	outline: 0;
+	cursor: pointer;
+}
+	.maxson-sidebar-form .maxson-clear-button:after { 
+		content: "\00D7";
+		position: absolute;
+		top: -10px;
+		right: 10px;
+		display: block;
+		padding: 2px;
+		margin: auto;
+		border-radius: 50%;
+		width: 12px;
+		line-height: 12px;
+		color: #fff;
+		text-align: center;
+		font-weight: bold;
+		font-size: 14px;
+		background-color: #ccc;
+		z-index: 1;
+		cursor: pointer;
+	}
+
+	.maxson-sidebar-form .maxson-input-field:valid ~ .maxson-clear-button { display: inline-block;}
+
+.maxson-sidebar-form .maxson-submit-button { margin-top: 15px;}
+
+
+/* ----------------------------------------
+Maxson Widget Helpers
+---------------------------------------- */
+
+.widgets-holder-wrap, 
+.widgets-holder-wrap.sidebar-generated { position: relative;}
+
+.maxson-sidebar-links { 
+	position: absolute;
+	top: 0;
+	right: 45px;
+	z-index: 100;
+}
+	.branch-3-6 .maxson-sidebar-links, 
+	.branch-3-7 .maxson-sidebar-links { 
+		right: 32px;
+		line-height: 34px;
+	}
+
+.maxson-sidebar-links a { 
+	padding: 0 5px;
+	line-height: 48px;
+	color: #999;
+	font-size: 12px;
+	text-decoration: none;
+	background-color: #fff;
+}
+
+/** WordPress Color Scheme - Default */
+.maxson-sidebar-links .maxson-shortcode-sidebar { 
+	display: none;
+	color: #0074a2;
+}
+	/** WordPress Color Scheme - Blue */
+	.admin-color-blue .maxson-sidebar-links .maxson-shortcode-sidebar { color: #096484;}
+
+	/** WordPress Color Scheme - Coffee */
+	.admin-color-coffee .maxson-sidebar-links .maxson-shortcode-sidebar { color: #c7a589;}
+
+	/** WordPress Color Scheme - Ectoplasm */
+	.admin-color-ectoplasm .maxson-sidebar-links .maxson-shortcode-sidebar { color: #a3b745;}
+
+	/** WordPress Color Scheme - Midnight */
+	.admin-color-midnight .maxson-sidebar-links .maxson-shortcode-sidebar { color: #e14d43;}
+
+	/** WordPress Color Scheme - Ocean */
+	.admin-color-ocean .maxson-sidebar-links .maxson-shortcode-sidebar { color: #9ebaa0;}
+
+	/** WordPress Color Scheme - Sunrise */
+	.admin-color-sunrise .maxson-sidebar-links .maxson-shortcode-sidebar { color: #dd823b;}
+
+	.widgets-holder-wrap:hover .maxson-sidebar-links .maxson-shortcode-sidebar { display: inline-block;}
+
+
+.maxson-sidebar-links .maxson-delete-sidebar { color: #a00;}
+	.maxson-sidebar-links .maxson-delete-sidebar:hover { color: red;}
+
+
+/* --------------------------------------------------
+TinyMCE Sidebar
+-------------------------------------------------- */
+
+.mce-maxson-sidebar button span,
+.mce-maxson-sidebar.mce-menubtn button span,
+.mce-maxson-sidebar.mce-menubtn.mce-fixed-width button span { 
+	width: 90px;
+	max-width: 100%;
+}
