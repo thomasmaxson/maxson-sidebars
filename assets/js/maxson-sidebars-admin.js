@@ -1,8 +1,10 @@
 jQuery(function(){ 
 
 	initMaxsonSidebarGenerator();
+	initMaxsonSidebarMetabox();
 
 });
+
 
 /* ----------------------------------------------------
 Init JQuery Sidebar Generator
@@ -10,45 +12,55 @@ Init JQuery Sidebar Generator
 
 function initMaxsonSidebarGenerator(){ 
 
-	if ( typeof(maxson_sidebar_management) === 'undefined' )
+	var maxson_data = maxson_sidebar_management;
+
+	if ( typeof(maxson_data) === 'undefined' )
 		return false;
 
+	var widgetsWrapper = jQuery('.widget-liquid-right'), 
+		link_shortcode = '<a href="#sidebar-shortcode" class="maxson-sidebar-shortcode">' + maxson_data.shortcode_text + '</a>',
+		link_delete    = '<a href="#delete-sidebar" class="maxson-sidebar-delete">' + maxson_data.delete_text + '</a>';
 
-	jQuery('#new-sidebar-add-widgets').on('click', function(event){ 
+
+	// Add form to widget column
+	widgetsWrapper.find('.sidebars-column-1').prepend( jQuery('#maxson-sidebar-generator-form').html() );
+
+
+	// Toggle all widgets, open newest widget added
+	jQuery('#new-sidebar-message').on('click', 'a', function(event){ 
 		event.preventDefault();
 
-		var new_sidebar = jQuery(this).attr('href');
+		var new_sidebar    = jQuery(this).attr('href');
 
-		jQuery('.widget-liquid-right .widgets-holder-wrap:not(.closed)').each(function(index, item){ 
+
+		widgetsWrapper.find('.widgets-holder-wrap:not(.closed)').each(function(index, item){ 
 			jQuery(item).addClass('closed');
 		});
 
-	//	jQuery(new_sidebar).siblings('.sidebar-name').find('.sidebar-name-arrow').trigger('click');
 		jQuery(new_sidebar + ' .sidebar-name .sidebar-name-arrow').trigger('click');
 	});
 
 
-	jQuery('.widget-liquid-right .sidebars-column-1').prepend( jQuery('#maxson-add-sidebar-form').html() );
-
-
-	// Add Container
+	// Add Links Container
 	jQuery('#widgets-right').find('.widgets-holder-wrap').append('<div class="maxson-sidebar-links" />');
 
-	// Add Shortcode Button
-	if( maxson_sidebar_management.show_shortcode_link )
+	// Add "shortcode" button to links container
+	if( maxson_data.show_shortcode_link )
 	{ 
-		jQuery('#widgets-right').find('.widgets-holder-wrap .maxson-sidebar-links').append('<a href="#sidebar-shortcode" class="maxson-sidebar maxson-shortcode-sidebar">' + maxson_sidebar_management.shortcode_text + '</a>');
+
+		jQuery('#widgets-right').find('.widgets-holder-wrap .maxson-sidebar-links').append( link_shortcode );
 	}
 
-	// Add Delete to Container
-	jQuery('#widgets-right').find('.widgets-holder-wrap.sidebar-generated .maxson-sidebar-links').append('<a href="#delete-sidebar" class="maxson-sidebar maxson-delete-sidebar">' + maxson_sidebar_management.delete_text + '</a>');
+	// Add "delete" button to links container
+	jQuery('#widgets-right').find('.widgets-holder-wrap.sidebar-generated .maxson-sidebar-links').append( link_delete );
 
 
-	jQuery('.widget-liquid-right').on('click', '.maxson-delete-sidebar', function(event){ 
+	// Delete generated sidebar
+	widgetsWrapper.on('click', '.maxson-sidebar-delete', function(event){ 
 		event.preventDefault();
 		event.stopPropagation();
 
-		var confirmation = confirm(maxson_sidebar_management.confirm);
+		var confirmation = confirm(maxson_data.confirm);
 
 		if (confirmation){ 
 			var widget      = jQuery(this).closest('.widgets-holder-wrap'),
@@ -57,7 +69,7 @@ function initMaxsonSidebarGenerator(){
 				widget_name = title.text(),
 				widget_id   = widget.find('.widgets-sortables').attr('id');
 
-			var $data = {
+			var $ajax_data = {
 				action : 'maxson_ajax_delete_sidebar',
 				nonce  : jQuery('.widget-liquid-right').find('input[name="maxson-delete-sidebar-nonce"]').val(),
 				name   : widget_name,
@@ -67,7 +79,7 @@ function initMaxsonSidebarGenerator(){
 			jQuery.ajax({
 				type: 'POST',
 				url: window.ajaxurl,
-				data: $data,
+				data: $ajax_data,
 
 				beforeSend: function(){
 					spinner.addClass('activate_spinner');
@@ -91,7 +103,9 @@ function initMaxsonSidebarGenerator(){
 				}
 			});
 		}
-	}).on('click', '.maxson-shortcode-sidebar', function(event){ 
+
+	// Alert generated sidebar shortcode
+	}).on('click', '.maxson-sidebar-shortcode', function(event){ 
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -100,30 +114,31 @@ function initMaxsonSidebarGenerator(){
 
 			prompt( maxson_sidebar_management.prompt, '[maxson_sidebar' + ' id="' + widget_id + '"]' );
 	});
+}
 
 
+/* ----------------------------------------------------
+Init JQuery Sidebar Generator
+---------------------------------------------------- */
 
+function initMaxsonSidebarMetabox(){ 
 
-
-
-
+	// Toggle "add new sidebar" form
 	jQuery('#sidebar-add-toggle').on('click', function(event){ 
 		event.preventDefault();
 
 		jQuery(this).parents('div:first').toggleClass( 'wp-hidden-children' );
 
-		jQuery('#maxson-metabox-sidebar-title').focus();
+		jQuery('#maxson-sidebar-metabox-title').focus();
 	} );
 
 
-
-
-
+	// AJAX submit new sidebar
 	jQuery('#sidebar-add').on('click', '#sidebar-add-submit', function(event){ 
 		event.preventDefault();
 
-		var widget_title = jQuery('#maxson-metabox-sidebar-title'), 
-			widget_desc  = jQuery('#maxson-metabox-sidebar-desc');
+		var widget_title = jQuery('#maxson-sidebar-metabox-title'), 
+			widget_desc  = jQuery('#maxson-sidebar-metabox-desc');
 
 		var $data = { 
 			action      : 'maxson_ajax_add_sidebar',
@@ -138,6 +153,8 @@ function initMaxsonSidebarGenerator(){
 			data: $data,
 
 			success: function(response){ 
+				console.log( response );
+
 				if(response.success == true){ 
 					widget_title.val('');
 					widget_desc.val('');
