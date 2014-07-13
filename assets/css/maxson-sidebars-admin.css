@@ -66,6 +66,10 @@ Form
 }
 	
 
+/* ------------------------------
+Header
+------------------------------ */
+
 .maxson-sidebar-form .maxson-sidebar-header { 
 	border: none;
 	background: none;
@@ -80,59 +84,35 @@ Form
 	white-space: nowrap;
 }
 
-.maxson-sidebar-form .maxson-input-field, 
-.maxson-sidebar-form .maxson-textarea-field { 
+
+/* ------------------------------
+Body
+------------------------------ */
+
+.maxson-sidebar-form .maxson-sidebar-body { text-align: center;}
+
+.maxson-sidebar-form .maxson-sidebar-body .maxson-input-field, 
+.maxson-sidebar-form .maxson-sidebar-body .maxson-textarea-field { 
 	width: 90%;
 	margin-bottom: 10px;
 }
 
-.maxson-sidebar-form .maxson-input-field { 
+.maxson-sidebar-form .maxson-sidebar-body .maxson-input-field { 
 	position: relative;
 	padding: 5px 8px;
 }
 
-.maxson-sidebar-form .maxson-clear-button { 
-	position: relative;
-	display: none;
-	padding: 0;
-	border: none;
-	margin: 0;
-	width: 0;
-	background-color: transparent;
-	vertical-align: middle;
-	outline: 0;
-	cursor: pointer;
-}
-	.maxson-sidebar-form .maxson-clear-button:after { 
-		content: "\00D7";
-		position: absolute;
-		top: -10px;
-		right: 10px;
-		display: block;
-		padding: 2px;
-		margin: auto;
-		border-radius: 50%;
-		width: 12px;
-		line-height: 12px;
-		color: #fff;
-		text-align: center;
-		font-weight: bold;
-		font-size: 14px;
-		background-color: #ccc;
-		z-index: 1;
-		cursor: pointer;
-	}
 
-	.maxson-sidebar-form .maxson-input-field:valid ~ .maxson-clear-button { display: inline-block;}
-
-.maxson-sidebar-form .maxson-sidebar-body { text-align: center;}
+/* ------------------------------
+Footer
+------------------------------ */
 
 .maxson-sidebar-form .maxson-sidebar-footer { 
 	padding: 0 5%;
 	text-align: right;
 }
 
-.maxson-sidebar-form .maxson-submit-button { margin-top: 0;}
+.maxson-sidebar-form .maxson-submit-button { margin: 0;}
 
 
 /* ----------------------------------------
@@ -164,32 +144,32 @@ Buttons
 }
 
 /** WordPress Color Scheme - Default */
-.maxson-sidebar-links .maxson-shortcode-sidebar { 
+.maxson-sidebar-links .maxson-sidebar-shortcode { 
 	display: none;
 	color: #0074a2;
 }
 	/** WordPress Color Scheme - Blue */
-	.admin-color-blue .maxson-sidebar-links .maxson-shortcode-sidebar { color: #096484;}
+	.admin-color-blue .maxson-sidebar-links .maxson-sidebar-shortcode { color: #096484;}
 
 	/** WordPress Color Scheme - Coffee */
-	.admin-color-coffee .maxson-sidebar-links .maxson-shortcode-sidebar { color: #c7a589;}
+	.admin-color-coffee .maxson-sidebar-links .maxson-sidebar-shortcode { color: #c7a589;}
 
 	/** WordPress Color Scheme - Ectoplasm */
-	.admin-color-ectoplasm .maxson-sidebar-links .maxson-shortcode-sidebar { color: #a3b745;}
+	.admin-color-ectoplasm .maxson-sidebar-links .maxson-sidebar-shortcode { color: #a3b745;}
 
 	/** WordPress Color Scheme - Midnight */
-	.admin-color-midnight .maxson-sidebar-links .maxson-shortcode-sidebar { color: #e14d43;}
+	.admin-color-midnight .maxson-sidebar-links .maxson-sidebar-shortcode { color: #e14d43;}
 
 	/** WordPress Color Scheme - Ocean */
-	.admin-color-ocean .maxson-sidebar-links .maxson-shortcode-sidebar { color: #9ebaa0;}
+	.admin-color-ocean .maxson-sidebar-links .maxson-sidebar-shortcode { color: #9ebaa0;}
 
 	/** WordPress Color Scheme - Sunrise */
-	.admin-color-sunrise .maxson-sidebar-links .maxson-shortcode-sidebar { color: #dd823b;}
+	.admin-color-sunrise .maxson-sidebar-links .maxson-sidebar-shortcode { color: #dd823b;}
 
-	.widgets-holder-wrap:hover .maxson-sidebar-links .maxson-shortcode-sidebar { display: inline-block;}
+	.widgets-holder-wrap:hover .maxson-sidebar-links .maxson-sidebar-shortcode { display: inline-block;}
 
-.maxson-sidebar-links .maxson-delete-sidebar { color: #a00;}
-	.maxson-sidebar-links .maxson-delete-sidebar:hover { color: red;}
+.maxson-sidebar-links .maxson-sidebar-delete { color: #a00;}
+	.maxson-sidebar-links .maxson-sidebar-delete:hover { color: red;}
 
 
 /* --------------------------------------------------
@@ -208,7 +188,7 @@ TinyMCE
 Metabox
 -------------------------------------------------- */
 
-.maxson-metabox-sidebar-title, 
-.maxson-metabox-sidebar-desc { width: 100%;}
+.maxson-sidebar-metabox-title, 
+.maxson-sidebar-metabox-desc { width: 100%;}
 
-.maxson-metabox-sidebar-desc { height: 70px;}
+.maxson-sidebar-metabox-desc { height: 70px;}
