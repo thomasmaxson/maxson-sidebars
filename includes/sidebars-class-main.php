@@ -152,6 +152,7 @@ class Maxson_Sidebar
 			$notices = get_option( 'sidebar_admin_notices', array() );
 			$plugin_name = 'Sidebars by Maxson';
 
+		//	TO DO: Figure this out.
 		//	$plugin_data = get_plugin_data( dirname( plugin_basename( $this->file ) ) );
 		//	$plugin_name = $plugin_data->Name;
 
@@ -348,7 +349,7 @@ class Maxson_Sidebar
 		$sidebar_replace_meta = '';
 
 		$post_obj = $wp_query->get_queried_object();
-		$post_id  = $post_obj->ID;
+		$post_id  = isset( $post_obj->ID ) ? $post_obj->ID : false;
 
 		if( is_home() )
 		{ 
@@ -363,7 +364,7 @@ class Maxson_Sidebar
 
 			if( isset( $post_type ) && ! empty( $post_types_available ) )
 			{ 
-				if( array_key_exists( $post_type, $post_types_available ) )
+				if( in_array( $post_type, $post_types_available ) )
 				{ 
 					$sidebar_find_meta    = get_sidebar_post_meta( 'find', $post_type, $post_id );
 					$sidebar_replace_meta = get_sidebar_post_meta( 'replace', $post_type, $post_id );
@@ -381,7 +382,7 @@ class Maxson_Sidebar
 
 				if ( isset( $taxonomy_type ) && ! empty( $taxonomies_available ) )
 				{ 
-					if( array_key_exists( $taxonomy_type, $taxonomies_available ) )
+					if( in_array( $taxonomy_type, $taxonomies_available ) )
 					{ 
 						$taxonomy_id     = $post_obj->term_id;
 						$taxonomy_parent = $post_obj->parent;
@@ -405,16 +406,21 @@ class Maxson_Sidebar
 
 			} else if( is_author() )
 			{ 
-				$authors_available = get_option( 'sidebar_authors_available', array() );
+				$authors_available = get_option( 'sidebar_user_roles_available', array() );
 
 				$author_id = $post_obj->data->ID;
 
 				if ( isset( $author_id ) && ! empty( $authors_available ) )
 				{ 
-					if( array_key_exists( $author_id, $authors_available ) )
+					$author = get_userdata( $author_id );
+					$author_roles = $author->roles;
+
+					$role_intersect = array_intersect( $author_roles, $authors_available );
+
+					if( count( $role_intersect ) > 0 )
 					{ 
-						$sidebar_find_meta    = get_sidebar_user_meta( 'find', 'author', $post_id );
-						$sidebar_replace_meta = get_sidebar_user_meta( 'replace', 'author', $post_id );
+						$sidebar_find_meta    = get_sidebar_user_meta( 'find', 'author', $author_id );
+						$sidebar_replace_meta = get_sidebar_user_meta( 'replace', 'author', $author_id );
 
 					} // endif
 				} // endif
