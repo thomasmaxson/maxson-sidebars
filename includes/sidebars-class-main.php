@@ -639,12 +639,14 @@ class Maxson_Sidebar
 		{ 
 			foreach ( $the_sidebars as $sidebar => $sidebar_data )
 			{ 
-				$sidebar_id    = $sidebar_data->ID;
-				$sidebar_name  = $sidebar_data->post_name;
-				$sidebar_title = $sidebar_data->post_title;
+				$sidebar_id          = $sidebar_data->ID;
+				$sidebar_name        = $sidebar_data->post_name;
+				$sidebar_title       = $sidebar_data->post_title;
+				$sidebar_description = $sidebar_data->post_content;
 
-				$args['id']   = $sidebar_name;
-				$args['name'] = $sidebar_title;
+				$args['id']          = $sidebar_name;
+				$args['name']        = $sidebar_title;
+				$args['description'] = $sidebar_description;
 
 				$args = apply_filters( 'maxson_sidebar_generated_args', $args, $sidebar_name, $sidebar_title );
 
@@ -783,9 +785,7 @@ class Maxson_Sidebar
 
 	public function widgets_form()
 	{ 
-		$title       = apply_filters( 'maxson_sidebar_form_title', __( 'Sidebar Generator', 'maxson' ) );
-		$placeholder = apply_filters( 'maxson_sidebar_form_placeholder', __( 'Enter sidebar name here', 'maxson' ) );
-		$button      = apply_filters( 'maxson_sidebar_form_button', __( 'Create Sidebar', 'maxson' ) );
+		$title = apply_filters( 'maxson_sidebar_form_title', __( 'Sidebar Generator', 'maxson' ) );
 	?>
 	<script type="text/html" id="maxson-add-sidebar-form">
 		<form method="POST" class="maxson-sidebar-form">
@@ -793,9 +793,12 @@ class Maxson_Sidebar
 				<h3 class="maxson-sidebar-title"><?php esc_html_e( $title ); ?></h3>
 			</div>
 			<div class="maxson-sidebar-body">
-				<input type="text" name="maxson-add-sidebar" class="maxson-input-field large-text" placeholder="<?php esc_attr_e( $placeholder ); ?>" required="required" value="">
-				<button type="reset" class="maxson-clear-button"></button>
-				<input type="submit" class="button button-primary button-large maxson-submit-button" value="<?php esc_attr_e( $button ); ?>">
+				<input type="text" name="maxson-add-sidebar-title" class="maxson-input-field large-text" placeholder="<?php esc_attr_e( __( 'Sidebar Name', 'maxson' ) ); ?>" required="required" value="">
+				<!-- <button type="reset" class="maxson-clear-button"></button> -->
+				<textarea name="maxson-add-sidebar-desc" class="maxson-textarea-field large-text" placeholder="<?php esc_attr_e( __( 'Sidebar Description', 'maxson' ) ); ?>" rows="3"></textarea>
+			</div>
+			<div class="maxson-sidebar-footer">
+				<input type="submit" class="button button-primary button-large maxson-submit-button" value="<?php esc_attr_e( __( 'Create Sidebar', 'maxson' ) ); ?>">
 				<?php wp_nonce_field( 'maxson-delete-sidebar-nonce', 'maxson-delete-sidebar-nonce' ); ?>
 			</div>
 		</form>
@@ -813,11 +816,11 @@ class Maxson_Sidebar
 
 	public function add_sidebar()
 	{ 
-		if ( ! empty( $_POST['maxson-add-sidebar'] ) )
+		if ( ! empty( $_POST['maxson-add-sidebar-title'] ) )
 		{
-			$field = sanitize_text_field( $_POST['maxson-add-sidebar'] );
+			$title = sanitize_text_field( $_POST['maxson-add-sidebar-title'] );
 
-			$post_title = (string) $this->clean_sidebar_name( $field );
+			$post_title = (string) $this->clean_sidebar_name( $title );
 			$post_slug  = sanitize_title( $post_title );
 			$post_data  = array( 
 				'post_title'  => $post_title,
@@ -825,6 +828,14 @@ class Maxson_Sidebar
 				'post_type'   => $this->post_type,
 				'post_slug'   => $post_slug
 			);
+
+
+			if ( isset( $_POST['maxson-add-sidebar-desc'] ) && ! empty( $_POST['maxson-add-sidebar-desc'] ) )
+			{
+				$post_data['post_content'] = sanitize_text_field( $_POST['maxson-add-sidebar-desc'] );
+
+			} // endif
+
 
 			if( $sidebar_id = wp_insert_post( $post_data ) )
 			{ 
@@ -857,11 +868,11 @@ class Maxson_Sidebar
 				'message' => sprintf( '<p>%s</p>', __( 'Oops! You do not have permission to do that action.', 'maxson' ) )
 			) );
 
-		} else if ( isset( $_POST['name'] ) && ! empty( $_POST['name'] ) )
+		} else if ( isset( $_POST['title'] ) && ! empty( $_POST['title'] ) )
 		{ 
-			$field = sanitize_text_field( $_POST['name'] );
+			$title = sanitize_text_field( $_POST['title'] );
 
-			$post_title = (string) $this->clean_sidebar_name( $field );
+			$post_title = (string) $this->clean_sidebar_name( $title );
 			$post_slug  = sanitize_title( $post_title );
 			$post_data  = array( 
 				'post_title'  => $post_title,
@@ -869,6 +880,14 @@ class Maxson_Sidebar
 				'post_type'   => $this->post_type,
 				'post_slug'   => $post_slug
 			);
+
+
+			if ( isset( $_POST['description'] ) && ! empty( $_POST['description'] ) )
+			{
+				$post_data['post_content'] = sanitize_text_field( $_POST['description'] );
+
+			} // endif
+
 
 			if( $sidebar_id = wp_insert_post( $post_data ) )
 			{ 
