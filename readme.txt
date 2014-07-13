@@ -53,6 +53,7 @@ This plugin is openly developed on GitHub - [View the Repo!](https://github.com/
 = 1.3 10-Jul-2014 =
 * ADDED - Post/Page/Custom Post Type meta box "Add New Sidebar" functionality
 * ADDED - Checks for theme sidebars on plugin activation/theme switch. Disable plugin if no sidebars.
+* FIXED - User role sidebar swap
 
 = 1.2 29-Jun-2014 =
 * ADDED - TinyMCE shortcode dropdown
