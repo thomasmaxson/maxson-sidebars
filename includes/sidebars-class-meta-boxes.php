@@ -51,19 +51,18 @@ class Maxson_Sidebar_Meta_Boxes
 
 		$sidebar_post_types = get_option( 'sidebar_post_types_available', array() );
 		$sidebar_taxonomies = get_option( 'sidebar_taxonomies_available', array() );
-		$sidebar_authors    = get_option( 'sidebar_authors_available', array() );
 
 		if( ! empty( $sidebar_post_types ) )
 		{ 
-			foreach ( $sidebar_post_types as $key => $value )
+			foreach ( $sidebar_post_types as $sidebar_post_type )
 			{ 
-				if( 'attachment' == $key )
+				if( 'attachment' == $sidebar_post_type )
 				{ 
 					add_action( 'admin_init', array( &$this, 'add_attachment_meta_box' ) );
 
 				} else 
 				{ 
-					add_action( "add_meta_boxes_{$key}", array( &$this, 'add_post_meta_box' ) );
+					add_action( "add_meta_boxes_{$sidebar_post_type}", array( &$this, 'add_post_meta_box' ) );
 					add_action( 'save_post', array( &$this, 'save_post_meta_box' ) );
 
 				} // endif
@@ -73,41 +72,34 @@ class Maxson_Sidebar_Meta_Boxes
 
 		if( ! empty( $sidebar_taxonomies ) )
 		{ 
-			foreach ( $sidebar_taxonomies as $key => $value )
+			foreach ( $sidebar_taxonomies as $sidebar_taxonomy )
 			{ 
 				// Add form fields
-				add_action( "{$key}_add_form_fields", array( &$this, 'add_taxonomy_meta' ), 10, 2 );
-				add_action( "{$key}_edit_form_fields", array( &$this, 'edit_taxonomy_meta' ), 10, 2 );
+				add_action( "{$sidebar_taxonomy}_add_form_fields", array( &$this, 'add_taxonomy_meta_field' ), 10, 2 );
+				add_action( "{$sidebar_taxonomy}_edit_form_fields", array( &$this, 'edit_taxonomy_meta_field' ), 10, 2 );
 
 				// Save form fields
-				add_action( "edited_{$key}", array( &$this, 'save_taxonomy_meta' ), 10, 2 );
-				add_action( "create_{$key}", array( &$this, 'save_taxonomy_meta' ), 10, 2 );
+				add_action( "edited_{$sidebar_taxonomy}", array( &$this, 'save_taxonomy_meta' ), 10, 2 );
+				add_action( "create_{$sidebar_taxonomy}", array( &$this, 'save_taxonomy_meta' ), 10, 2 );
 
 				// Delete field meta
-				add_action( "delete_{$key}", array( &$this, 'delete_taxonomy_meta' ), 10, 2 );
+				add_action( "delete_{$sidebar_taxonomy}", array( &$this, 'delete_taxonomy_meta' ), 10, 2 );
 
 			} // endforeach
 		} // endif
 
 
-		if( ! empty( $sidebar_authors ) )
-		{ 
-			foreach ( $sidebar_authors as $key => $value )
-			{ 
-				// Profile.php
-				add_action( 'show_user_profile', array( &$this, 'add_author_meta' ) );
-				add_action( 'personal_options_update', array( &$this, 'save_author_meta' ) );
+		// Profile.php
+		add_action( 'show_user_profile', array( &$this, 'add_author_meta' ) );
+		add_action( 'personal_options_update', array( &$this, 'save_author_meta' ) );
 
-				// User-Edit.php
-				add_action( 'edit_user_profile', array( &$this, 'add_author_meta' ) );
-				add_action( 'edit_user_profile_update', array( &$this, 'save_author_meta' ) );
+		// User-Edit.php
+		add_action( 'edit_user_profile', array( &$this, 'add_author_meta' ) );
+		add_action( 'edit_user_profile_update', array( &$this, 'save_author_meta' ) );
 
-				// User-New.php
-				add_action( 'user_new_form', array( &$this, 'add_author_meta' ) );
-				add_action( 'user_register', array( &$this, 'save_author_meta' ) );
-
-			} // endforeach
-		} // endif
+		// User-New.php
+		add_action( 'user_new_form', array( &$this, 'add_author_meta' ) );
+		add_action( 'user_register', array( &$this, 'save_author_meta' ) );
 	}
 
 
@@ -191,7 +183,7 @@ class Maxson_Sidebar_Meta_Boxes
 
 
 	/**
-	 * Post and page sidebar meta boxes
+	 * Init post and page sidebar meta boxes
 	 *
 	 * @since 		1.0
 	 *
@@ -206,12 +198,12 @@ class Maxson_Sidebar_Meta_Boxes
 		$post_context  = apply_filters( 'sidebar_post_meta_box_context', 'side', $post_type );
 		$post_priority = apply_filters( 'sidebar_post_meta_box_priority', 'default', $post_type );
 
-		add_meta_box( 'post_sidebar_replacement', $post_title, array( &$this, 'post_meta_box_field' ), $post_type, $post_context, $post_priority, array( 'post_type' => $post_type ) );
+		add_meta_box( 'post_sidebar_replacement', $post_title, array( &$this, 'post_meta_box_field' ), $post_type, $post_context, $post_priority );
 	}
 
 
 	/**
-	 * Attachment sidebar meta box
+	 * Init attachment sidebar meta box
 	 *
 	 * @since 		1.0
 	 *
@@ -342,7 +334,7 @@ class Maxson_Sidebar_Meta_Boxes
 	 * @return 		void
 	 */
 
-	public function add_taxonomy_meta( $term )
+	public function add_taxonomy_meta_field( $term )
 	{ 
 		global $sidebars;
 
@@ -368,12 +360,12 @@ class Maxson_Sidebar_Meta_Boxes
 	?>
 		<div class="form-field">
 			<label for="sidebar_find"><?php _e( 'Find Sidebar', 'maxson' ); ?></label>
-				<?php printf( '<select name="%s[find]" id="sidebar_find" class="widefat">%s</select>', 'sidebar_meta_taxonomy', join( "\n", $sidebar_find_items ) ); ?>
+			<?php printf( '<select name="%s[find]" id="sidebar_find" class="widefat">%s</select>', 'sidebar_meta_taxonomy', join( "\n", $sidebar_find_items ) ); ?>
 
 			<br><br>
 
 			<label for="sidebar_replace"><?php _e( 'Replace Sidebar', 'maxson' ); ?></label>
-				<?php printf( '<select name="%s[replace]" id="sidebar_replace" class="widefat">%s</select>', 'sidebar_meta_taxonomy', join( "\n", $sidebar_replace_items ) ); ?>
+			<?php printf( '<select name="%s[replace]" id="sidebar_replace" class="widefat">%s</select>', 'sidebar_meta_taxonomy', join( "\n", $sidebar_replace_items ) ); ?>
 		</div>
 	<?php }
 
@@ -388,7 +380,7 @@ class Maxson_Sidebar_Meta_Boxes
 	 * @return 		void
 	 */
 
-	public function edit_taxonomy_meta( $term, $taxonomy )
+	public function edit_taxonomy_meta_field( $term, $taxonomy )
 	{ 
 		global $sidebars;
 
@@ -502,7 +494,7 @@ class Maxson_Sidebar_Meta_Boxes
 		{ 
 			unset( $taxonomies[$term_id] );
 
-			update_option( 'sidebar_meta_taxonomy', (array) $taxonomies );
+			update_option( 'sidebar_meta_taxonomy', $taxonomies );
 
 		} // endif
 	}
@@ -520,7 +512,21 @@ class Maxson_Sidebar_Meta_Boxes
 	public function add_author_meta( $user )
 	{ 
 		$user_id = ( isset( $user->ID ) && ! empty( $user->ID ) ) ? $user->ID : false;
-	?>
+		$user_roles = array();
+
+		if( $user_id )
+		{ 
+			$user = get_userdata( $user_id );
+			$user_roles = $user->roles;
+
+		} // endif
+
+		$sidebar_authors = get_option( 'sidebar_user_roles_available', array() );
+
+		$role_intersect = array_intersect( $user_roles, $sidebar_authors );
+
+		if( count( $role_intersect ) > 0 )
+		{ ?>
 		<table class="form-table">
 			<tr>
 				<th><label><?php _e( 'Sidebar', 'maxson' ); ?></label></th>
@@ -529,7 +535,8 @@ class Maxson_Sidebar_Meta_Boxes
 				</td>
 			</tr>
 		</table>
-	<?php }
+		<?php } // endif
+	}
 
 
 	/**
