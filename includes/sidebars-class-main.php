@@ -174,7 +174,7 @@ class Maxson_Sidebar
 
 	public function activation_error()
 	{ 
-		$notices = get_option( 'sidebar_admin_notices' );
+		$notices = get_option( 'sidebar_admin_notices', array() );
 
 		if( empty( $notices ) )
 			return false;
@@ -199,7 +199,7 @@ class Maxson_Sidebar
 
 	public function can_deactivate_plugin()
 	{ 
-		$notices = get_option( 'sidebar_admin_notices' );
+		$notices = get_option( 'sidebar_admin_notices', array() );
 
 		if( ! empty( $notices ) && is_plugin_active( $this->basename ) )
 		{ 
@@ -222,11 +222,9 @@ class Maxson_Sidebar
 
 	function load_localization()
 	{ 
-		$domain          = 'maxson';
-		$abs_rel_path    = false;
-		$plugin_rel_path = dirname( plugin_basename( $this->file ) ) . '/languages/';
+		$plugin_rel_path = trailingslashit( dirname( plugin_basename( $this->file ) ) ) . 'languages/';
 
-		load_plugin_textdomain( $domain, $abs_rel_path, $plugin_rel_path );
+		load_plugin_textdomain( 'maxson', false, $plugin_rel_path );
 	}
 
 
@@ -351,7 +349,7 @@ class Maxson_Sidebar
 		$post_obj = $wp_query->get_queried_object();
 		$post_id  = isset( $post_obj->ID ) ? $post_obj->ID : false;
 
-		if( is_home() )
+		if( is_home() || is_front_page() )
 		{ 
 			$sidebar_find_meta    = get_sidebar_default( 'index', 'find' );
 			$sidebar_replace_meta = get_sidebar_default( 'index', 'replace' );
@@ -547,11 +545,15 @@ class Maxson_Sidebar
 
 	public function plugin_action_links( $links, $file )
 	{ 
-		$links = array_merge( $links, array( 
-			'options' => sprintf( '<a href="%s">%s</a>', 
-				add_query_arg( 'page', 'sidebar_settings', admin_url( 'options-general.php' ) ), 
-				_x( 'Settings', 'Plugin settings link', 'maxson' )
-		) ) );
+		if( isset( $_GET['activate'] ) )
+		{ 
+			$links = array_merge( $links, array( 
+				'options' => sprintf( '<a href="%s">%s</a>', 
+					add_query_arg( 'page', 'sidebar_settings', admin_url( 'options-general.php' ) ), 
+					_x( 'Settings', 'Plugin settings link', 'maxson' )
+			) ) );
+
+		} // endif
 
 		return (array) $links;
 	}
