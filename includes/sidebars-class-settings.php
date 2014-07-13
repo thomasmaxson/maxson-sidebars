@@ -319,7 +319,7 @@ class Maxson_Sidebar_Settings
 		add_settings_field(	'sidebar_meta_category', __( 'Category Template', 'maxson' ), array( &$this, 'sidebar_option_page_override' ), 'sidebar_settings', 'sidebar_settings_meta_section', 'cateogry' );
 
 		register_setting( 'sidebar_settings', 'sidebar_default_index' );
-		add_settings_field(	'sidebar_meta_index', __( 'Index Template', 'maxson' ), array( &$this, 'sidebar_option_page_override' ), 'sidebar_settings', 'sidebar_settings_meta_section', 'index' );
+		add_settings_field(	'sidebar_meta_index', __( 'Index (Home) Template', 'maxson' ), array( &$this, 'sidebar_option_page_override' ), 'sidebar_settings', 'sidebar_settings_meta_section', 'index' );
 
 		register_setting( 'sidebar_settings', 'sidebar_default_page' );
 		add_settings_field(	'sidebar_meta_page', __( 'Page Template', 'maxson' ), array( &$this, 'sidebar_option_page_override' ), 'sidebar_settings', 'sidebar_settings_meta_section', 'page' );
