@@ -267,8 +267,9 @@ class Maxson_Sidebar
 	public function get_sidebars( $args = array() )
 	{ 
 		$defaults = array( 
-			'post_type'   => $this->post_type,
-			'post_status' => 'publish'
+			'post_type'      => $this->post_type,
+			'post_status'    => 'publish', 
+			'posts_per_page' => -1
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -760,11 +761,11 @@ class Maxson_Sidebar
 
 				$the_sidebars = $this->get_sidebars( $args );
 
-				if( isset( $latest_sidebar[0] ) )
+				if( isset( $the_sidebars[0] ) )
 				{ 
 					$latest_sidebar = $the_sidebars[0]->post_name;
 
-					printf( '<div id="message" class="updated"><p>%s <a href="#%s" id="new-sidebar-add-widgets">%s</a></p></div>', __( 'Sidebar added.' ), $latest_sidebar, __( 'Add widgets.' ) );
+					printf( '<div id="new-sidebar-message" class="updated"><p>%s <a href="#%s">%s</a></p></div>', __( 'Sidebar added.' ), $latest_sidebar, __( 'Add widgets.' ) );
 				} // endif
 
 			} // endif
@@ -787,15 +788,18 @@ class Maxson_Sidebar
 	{ 
 		$title = apply_filters( 'maxson_sidebar_form_title', __( 'Sidebar Generator', 'maxson' ) );
 	?>
-	<script type="text/html" id="maxson-add-sidebar-form">
+	<script type="text/html" id="maxson-sidebar-generator-form">
 		<form method="POST" class="maxson-sidebar-form">
 			<div class="maxson-sidebar-header">
 				<h3 class="maxson-sidebar-title"><?php esc_html_e( $title ); ?></h3>
 			</div>
 			<div class="maxson-sidebar-body">
-				<input type="text" name="maxson-add-sidebar-title" class="maxson-input-field large-text" placeholder="<?php esc_attr_e( __( 'Sidebar Name', 'maxson' ) ); ?>" required="required" value="">
-				<!-- <button type="reset" class="maxson-clear-button"></button> -->
-				<textarea name="maxson-add-sidebar-desc" class="maxson-textarea-field large-text" placeholder="<?php esc_attr_e( __( 'Sidebar Description', 'maxson' ) ); ?>" rows="3"></textarea>
+				<label for="maxson-generator-sidebar-title" class="screen-reader-text">
+					<?php esc_html_e( 'Sidebar Name', 'maxson' ); ?></label>
+				<input type="text" name="maxson-generator-sidebar-title" id="maxson-generator-sidebar-title" class="maxson-input-field large-text" placeholder="<?php esc_attr_e( __( 'Sidebar Name', 'maxson' ) ); ?>" required="required" value="">
+				<label for="maxson-generator-sidebar-desc" class="screen-reader-text">
+					<?php esc_html_e( 'Sidebar Description', 'maxson' ); ?></label>
+				<textarea name="maxson-generator-sidebar-desc" id="maxson-generator-sidebar-desc" class="maxson-textarea-field large-text" placeholder="<?php esc_attr_e( __( 'Sidebar Description', 'maxson' ) ); ?>" rows="3"></textarea>
 			</div>
 			<div class="maxson-sidebar-footer">
 				<input type="submit" class="button button-primary button-large maxson-submit-button" value="<?php esc_attr_e( __( 'Create Sidebar', 'maxson' ) ); ?>">
@@ -816,9 +820,9 @@ class Maxson_Sidebar
 
 	public function add_sidebar()
 	{ 
-		if ( ! empty( $_POST['maxson-add-sidebar-title'] ) )
+		if ( ! empty( $_POST['maxson-generator-sidebar-title'] ) )
 		{
-			$title = sanitize_text_field( $_POST['maxson-add-sidebar-title'] );
+			$title = sanitize_text_field( $_POST['maxson-generator-sidebar-title'] );
 
 			$post_title = (string) $this->clean_sidebar_name( $title );
 			$post_slug  = sanitize_title( $post_title );
@@ -829,17 +833,13 @@ class Maxson_Sidebar
 				'post_slug'   => $post_slug
 			);
 
-
-			if ( isset( $_POST['maxson-add-sidebar-desc'] ) && ! empty( $_POST['maxson-add-sidebar-desc'] ) )
-			{
-				$post_data['post_content'] = sanitize_text_field( $_POST['maxson-add-sidebar-desc'] );
-
-			} // endif
-
+			if ( ! empty( $_POST['maxson-generator-sidebar-desc'] ) )
+				$post_data['post_content'] = sanitize_text_field( $_POST['maxson-generator-sidebar-desc'] );
 
 			if( $sidebar_id = wp_insert_post( $post_data ) )
 			{ 
-				set_post_format( $sidebar_id, 'standard' );
+				if( current_theme_supports( 'post-formats' ) )
+					set_post_format( $sidebar_id, 'standard' );
 
 				wp_redirect( add_query_arg( array( 
 					'sidebar' => 'added'
@@ -884,14 +884,17 @@ class Maxson_Sidebar
 
 			if ( isset( $_POST['description'] ) && ! empty( $_POST['description'] ) )
 			{
-				$post_data['post_content'] = sanitize_text_field( $_POST['description'] );
+				$description = sanitize_text_field( $_POST['description'] );
+
+				$post_data['post_content'] = $description;
 
 			} // endif
 
 
 			if( $sidebar_id = wp_insert_post( $post_data ) )
 			{ 
-				set_post_format( $sidebar_id, 'standard' );
+				if( current_theme_supports( 'post-formats' ) )
+					set_post_format( $sidebar_id, 'standard' );
 
 				wp_send_json_success( array( 
 					'sidebar_id'    => $sidebar_id, 
