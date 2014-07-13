@@ -236,18 +236,20 @@ class Maxson_Sidebar_Meta_Boxes
 		$add_new_value = sprintf( __( 'New %s Name', 'maxson' ), ucwords( $this->post_type ) );
 
 		$this->build_meta_box_field( get_the_ID() );
+	?>
+		<div id="sidebar-adder" class="wp-hidden-children">
+			<h4><a id="sidebar-add-toggle" href="#sidebar-add" class="hide-if-no-js">+ <?php esc_html_e( $add_new_label ); ?></a></h4>
+			<p id="sidebar-add" class="sidebar-add wp-hidden-child">
+				<label for="maxson-metabox-sidebar-title" class="screen-reader-text">
+					<?php esc_html_e( $add_new_label ); ?></label>
+				<input type="text" name="maxson-metabox-sidebar-title" id="maxson-metabox-sidebar-title" class="maxson-metabox-sidebar-title" value="" aria-required="true" placeholder="<?php esc_attr_e( 'Sidebar name', 'maxson' ); ?>">
+				<textarea name="maxson-metabox-sidebar-desc" id="maxson-metabox-sidebar-desc" class="maxson-metabox-sidebar-desc" row="5" placeholder="<?php esc_attr_e( 'Sidebar description', 'maxson' ); ?>"></textarea>
 
-		echo '<div id="sidebar-adder" class="wp-hidden-children">';
-			printf( '<h4><a id="sidebar-add-toggle" href="#sidebar-add" class="hide-if-no-js">+ %s</a></h4>', $add_new_label );
-
-			echo '<p id="sidebar-add" class="sidebar-add wp-hidden-child">';
-				printf( '<label class="screen-reader-text" for="newsidebar">%s</label>', $add_new_label );
-				echo'<input type="text" name="newsidebar" id="newsidebar" class="form-required form-input-tip" value="" aria-required="true">';
-				printf( '<input type="button" id="sidebar-add-submit" class="button sidebar-add-submit" value="%s">', $add_new_label );
-				wp_nonce_field( 'maxson-add-sidebar-nonce', 'maxson-add-sidebar-nonce' );
-			echo '</p>';
-		echo '</div>';
-	}
+				<input type="button" id="sidebar-add-submit" class="button sidebar-add-submit" value="<?php esc_attr_e( $add_new_label ); ?>">
+				<?php wp_nonce_field( 'maxson-add-sidebar-nonce', 'maxson-add-sidebar-nonce' ); ?>
+			</p>
+		</div>
+	<?php }
 
 
 	/**
