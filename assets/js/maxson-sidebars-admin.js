@@ -112,7 +112,7 @@ function initMaxsonSidebarGenerator(){
 
 		jQuery(this).parents('div:first').toggleClass( 'wp-hidden-children' );
 
-		jQuery('#newsidebar').focus();
+		jQuery('#maxson-metabox-sidebar-title').focus();
 	} );
 
 
@@ -122,12 +122,14 @@ function initMaxsonSidebarGenerator(){
 	jQuery('#sidebar-add').on('click', '#sidebar-add-submit', function(event){ 
 		event.preventDefault();
 
-		var widget_name = jQuery('#newsidebar').val();
+		var widget_title = jQuery('#maxson-metabox-sidebar-title'), 
+			widget_desc  = jQuery('#maxson-metabox-sidebar-desc');
 
-		var $data = {
-			action : 'maxson_ajax_add_sidebar',
-			nonce  : jQuery(this).siblings('input[name="maxson-add-sidebar-nonce"]').val(),
-			name   : widget_name
+		var $data = { 
+			action      : 'maxson_ajax_add_sidebar',
+			nonce       : jQuery(this).siblings('input[name="maxson-add-sidebar-nonce"]').val(),
+			title       : widget_title.val(),
+			description : widget_desc.val()
 		};
 
 		jQuery.ajax({
@@ -137,7 +139,8 @@ function initMaxsonSidebarGenerator(){
 
 			success: function(response){ 
 				if(response.success == true){ 
-					jQuery('#newsidebar').val('');
+					widget_title.val('');
+					widget_desc.val('');
 					jQuery('#sidebar_replace').append( '<option value="' + response.data.sidebar_slug + '">' + response.data.sidebar_title + '</option>' );
 				} // endif
 			}
