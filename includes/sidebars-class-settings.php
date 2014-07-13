@@ -394,13 +394,13 @@ class Maxson_Sidebar_Settings
 
 		foreach( $post_types as $post_type )
 		{ 
-			$value = array_key_exists( $post_type, $options );
-			$checked = checked( $value, 1, false );
+			$value = in_array( $post_type, $options );
+			$checked = checked( $value, true, false );
 
 			$object	= get_post_type_object( $post_type );
 			$text = ucwords( $object->labels->name );
 
-			printf( '<input type="checkbox" name="sidebar_post_types_available[%1$s]" id="%1$s" value="1"%2$s><label for="%1$s">&nbsp;%3$s</label><br>', esc_attr( $post_type ), $checked, esc_html( $text ) );
+			printf( '<input type="checkbox" name="sidebar_post_types_available[]" id="%1$s" value="%1$s"%2$s><label for="%1$s">&nbsp;%3$s</label><br>', esc_attr( $post_type ), $checked, esc_html( $text ) );
 
 		} // endforeach
 	}
@@ -434,13 +434,13 @@ class Maxson_Sidebar_Settings
 
 		foreach( $taxonomies as $taxonomy )
 		{ 
-			$value   = array_key_exists( $taxonomy, $options );
-			$checked = checked( $value, 1, false );
+			$value   = in_array( $taxonomy, $options );
+			$checked = checked( $value, true, false );
 
 			$object = get_taxonomy( $taxonomy );
 			$text   = ucwords( $object->labels->name );
 
-			printf( '<input type="checkbox" name="sidebar_taxonomies_available[%1$s]" id="%1$s" value="1"%2$s><label for="%1$s">&nbsp;%3$s</label><br>', esc_attr( $taxonomy ), $checked, esc_html( $text ) );
+			printf( '<input type="checkbox" name="sidebar_taxonomies_available[]" id="%1$s" value="%1$s"%2$s><label for="%1$s">&nbsp;%3$s</label><br>', esc_attr( $taxonomy ), $checked, esc_html( $text ) );
 
 		} // endforeach
 	}
@@ -467,20 +467,20 @@ class Maxson_Sidebar_Settings
 
 		foreach( $user_roles as $user_role )
 		{ 
-			$value   = array_key_exists( $user_role, $options );
+			$value   = in_array( $user_role, $options );
 			$checked = checked( $value, 1, false );
 
 			$object = $all_user_roles[$user_role];
 			$text = ucwords( $object['name'] );
 
-			printf( '<input type="checkbox" name="sidebar_user_roles_available[%1$s]" id="%1$s" value="1"%2$s><label for="%1$s">&nbsp;%3$s</label><br>', esc_attr( $user_role ), $checked, esc_html( $text ) );
+			printf( '<input type="checkbox" name="sidebar_user_roles_available[]" id="%1$s" value="%1$s"%2$s><label for="%1$s">&nbsp;%3$s</label><br>', esc_attr( $user_role ), $checked, esc_html( $text ) );
 
 		} // endforeach
 	}
 
 
 	/**
-	 * Sidebar general override callback
+	 * Sidebar default override callback
 	 * 
 	 * @since 		1.0
 	 * 
