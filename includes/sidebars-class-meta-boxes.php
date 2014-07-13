@@ -232,20 +232,24 @@ class Maxson_Sidebar_Meta_Boxes
 
 	public function post_meta_box_field( $data ) 
 	{ 
-		$add_new_label = sprintf( __( 'Add New %s', 'maxson' ), ucwords( $this->post_type ) );
-		$add_new_value = sprintf( __( 'New %s Name', 'maxson' ), ucwords( $this->post_type ) );
+		$input_placeholder       = sprintf( __( 'New %s Name', 'maxson' ), $this->post_type );
+		$description_placeholder = sprintf( __( 'New %s description', 'maxson' ), $this->post_type );
+
+		$button_text = sprintf( __( 'Add New %s', 'maxson' ), ucwords( $this->post_type ) );
 
 		$this->build_meta_box_field( get_the_ID() );
 	?>
 		<div id="sidebar-adder" class="wp-hidden-children">
-			<h4><a id="sidebar-add-toggle" href="#sidebar-add" class="hide-if-no-js">+ <?php esc_html_e( $add_new_label ); ?></a></h4>
+			<h4><a id="sidebar-add-toggle" href="#sidebar-add" class="hide-if-no-js">+ <?php esc_html_e( $button_text ); ?></a></h4>
 			<p id="sidebar-add" class="sidebar-add wp-hidden-child">
-				<label for="maxson-metabox-sidebar-title" class="screen-reader-text">
-					<?php esc_html_e( $add_new_label ); ?></label>
-				<input type="text" name="maxson-metabox-sidebar-title" id="maxson-metabox-sidebar-title" class="maxson-metabox-sidebar-title" value="" aria-required="true" placeholder="<?php esc_attr_e( 'Sidebar name', 'maxson' ); ?>">
-				<textarea name="maxson-metabox-sidebar-desc" id="maxson-metabox-sidebar-desc" class="maxson-metabox-sidebar-desc" row="5" placeholder="<?php esc_attr_e( 'Sidebar description', 'maxson' ); ?>"></textarea>
+				<label for="maxson-sidebar-metabox-title" class="screen-reader-text">
+					<?php esc_html_e( $input_placeholder ); ?></label>
+				<input type="text" name="maxson-sidebar-metabox-title" id="maxson-sidebar-metabox-title" class="maxson-sidebar-metabox-title" value="" aria-required="true" placeholder="<?php esc_attr_e( $input_placeholder ); ?>">
+				<label for="maxson-sidebar-metabox-desc" class="screen-reader-text">
+					<?php esc_html_e( $description_placeholder ); ?></label>
+				<textarea name="maxson-sidebar-metabox-desc" id="maxson-sidebar-metabox-desc" class="maxson-sidebar-metabox-desc" row="5" placeholder="<?php esc_attr_e( $description_placeholder ); ?>"></textarea>
 
-				<input type="button" id="sidebar-add-submit" class="button sidebar-add-submit" value="<?php esc_attr_e( $add_new_label ); ?>">
+				<input type="button" id="sidebar-add-submit" class="button sidebar-add-submit" value="<?php esc_attr_e( $button_text ); ?>">
 				<?php wp_nonce_field( 'maxson-add-sidebar-nonce', 'maxson-add-sidebar-nonce' ); ?>
 			</p>
 		</div>
