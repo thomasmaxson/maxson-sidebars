@@ -83,7 +83,7 @@ class Maxson_Sidebar
 
 		// plugins.php
 		add_filter( "plugin_action_links_{$this->basename}", array( &$this, 'plugin_action_links' ), 10, 2 );
-		add_filter( "network_admin_plugin_action_links_{$this->basename}", array( &$this, 'plugin_action_links' ), 10, 2 );
+	//	add_filter( "network_admin_plugin_action_links_{$this->basename}", array( &$this, 'plugin_action_links' ), 10, 2 );
 
 		// widgets.php
 		add_action( 'admin_print_scripts-widgets.php', array( &$this, 'widgets_form' ) );
@@ -132,6 +132,124 @@ class Maxson_Sidebar
 	function do_deactivation()
 	{ 
 		flush_rewrite_rules();
+	}
+
+
+	/**
+	 * Initialize plugin translations
+	 * 
+	 * @since 		1.0
+	 * 
+	 * @return 		void
+	 */
+
+	function load_localization()
+	{ 
+		$plugin_rel_path = trailingslashit( dirname( plugin_basename( $this->file ) ) ) . 'languages/';
+
+		load_plugin_textdomain( 'maxson', false, $plugin_rel_path );
+	}
+
+
+	/** 
+	 * Return global plugin data
+	 *
+	 * @since 		1.0
+	 * 
+	 * @return 		string
+	 */
+
+	public function get_version()
+	{ 
+		return $this->version;
+	}
+
+
+	public function get_post_type()
+	{ 
+		return $this->post_type;
+	}
+
+
+	public function get_name( $plural = false )
+	{ 
+		$value = ( $plural ) ? $this->plural : $this->singular;
+
+		return $value;
+	}
+
+
+	/**
+	 * Return available sidebars
+	 * 
+	 * @since 		1.1
+	 * 
+	 * @param       array $args Arguments for getting posts
+	 * @return 		array
+	 */
+
+	public function get_sidebars( $args = array() )
+	{ 
+		$defaults = array( 
+			'post_type'      => $this->post_type,
+			'post_status'    => 'publish', 
+			'posts_per_page' => -1
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$sidebars = get_posts( $args );
+
+		return $sidebars;
+	}
+
+
+	/**
+	 * Return array of available sidebars
+	 * 
+	 * @since 		1.0
+	 *
+	 * @param       boolean $show_generated_sidebars Include generated sidebars in array 
+	 * @return 		string
+	 */
+
+	public function get_sidebars_array( $show_generated_sidebars = false )
+	{ 
+		global $wp_registered_sidebars;
+
+		$output = array();
+
+		if( $wp_registered_sidebars && ! is_wp_error( $wp_registered_sidebars ) )
+		{ 
+			$output[null] = apply_filters( 'maxson_sidebar_meta_box_default_text', __( 'Choose One', 'maxson' ) );
+
+			$generated_sidebars = array();
+			$the_sidebars = $this->get_sidebars();
+
+			if( ! empty( $the_sidebars ) )
+			{ 
+				foreach( $the_sidebars as $the_sidebar )
+				{ 
+					$generated_sidebars[] = $the_sidebar->post_name;
+
+				} // endforeach
+			} // endif
+
+
+			foreach( $wp_registered_sidebars as $sidebar_lookup )
+			{ 
+				$sidebar_id   = strtolower( $sidebar_lookup['id'] );
+				$sidebar_name = ucwords( $sidebar_lookup['name'] );
+
+				if( false == $show_generated_sidebars && in_array( $sidebar_id, $generated_sidebars ) )
+					continue;
+
+				$output[$sidebar_id] = $sidebar_name;
+
+			} // endforeach
+		} // endif
+
+		return (array) $output;
 	}
 
 
@@ -205,6 +323,7 @@ class Maxson_Sidebar
 		{ 
 			deactivate_plugins( $this->basename );
 
+			// Remove activation message from plugin.php page
 			if( isset( $_GET['activate'] ) )
 				unset( $_GET['activate'] );
 
@@ -213,128 +332,12 @@ class Maxson_Sidebar
 
 
 	/**
-	 * Initialize translations
-	 * 
-	 * @since 		1.0
-	 * 
-	 * @return 		void
-	 */
-
-	function load_localization()
-	{ 
-		$plugin_rel_path = trailingslashit( dirname( plugin_basename( $this->file ) ) ) . 'languages/';
-
-		load_plugin_textdomain( 'maxson', false, $plugin_rel_path );
-	}
-
-
-	/** 
-	 * Get plugin global data
-	 *
-	 * @since 		1.0
-	 * 
-	 * @return 		string
-	 */
-
-	public function get_version()
-	{ 
-		return $this->version;
-	}
-
-
-	public function get_post_type()
-	{ 
-		return $this->post_type;
-	}
-
-
-	public function get_name( $plural = false )
-	{ 
-		$value = ( $plural ) ? $this->plural : $this->singular;
-
-		return $value;
-	}
-
-
-	/**
-	 * Get available sidebars
-	 * 
-	 * @return 		array
-	 *
-	 * @since 		1.1
-	 */
-
-	public function get_sidebars( $args = array() )
-	{ 
-		$defaults = array( 
-			'post_type'      => $this->post_type,
-			'post_status'    => 'publish', 
-			'posts_per_page' => -1
-		);
-
-		$args = wp_parse_args( $args, $defaults );
-
-		$sidebars = get_posts( $args );
-
-		return $sidebars;
-	}
-
-
-	/**
-	 * Get array of available sidebars
-	 * 
-	 * @return 		string
-	 *
-	 * @since 		1.0
-	 */
-
-	public function get_sidebars_array( $show_generated_sidebars = false )
-	{ 
-		global $wp_registered_sidebars;
-
-		$output = array();
-
-		if ( $wp_registered_sidebars && ! is_wp_error( $wp_registered_sidebars ) )
-		{ 
-			$output[null] = apply_filters( 'maxson_sidebar_meta_box_default_text', __( 'Choose One', 'maxson' ) );
-
-			$generated_sidebars = array();
-			$the_sidebars = $this->get_sidebars();
-
-			if ( ! empty( $the_sidebars ) )
-			{ 
-				foreach( $the_sidebars as $the_sidebar )
-				{ 
-					$generated_sidebars[] = $the_sidebar->post_name;
-
-				} // endforeach
-			} // endif
-
-
-			foreach ( $wp_registered_sidebars as $sidebar_lookup )
-			{ 
-				$sidebar_id   = strtolower( $sidebar_lookup['id'] );
-				$sidebar_name = ucwords( $sidebar_lookup['name'] );
-
-				if ( false == $show_generated_sidebars && in_array( $sidebar_id, $generated_sidebars ) )
-					continue;
-
-				$output[$sidebar_id] = $sidebar_name;
-
-			} // endforeach
-		} // endif
-
-		return (array) $output;
-	}
-
-
-	/**
 	 * Hijack sidebar widgets
 	 * Replaces the content, but not the design of sidebars during the page display
-	 * 
-	 * @return 		void
 	 *
 	 * @since 		1.0
+	 * 
+	 * @return 		void
 	 */
 
 	function sidebar_hijack( $query )
@@ -379,7 +382,7 @@ class Maxson_Sidebar
 
 				$taxonomy_type = $post_obj->taxonomy;
 
-				if ( isset( $taxonomy_type ) && ! empty( $taxonomies_available ) )
+				if( isset( $taxonomy_type ) && ! empty( $taxonomies_available ) )
 				{ 
 					if( in_array( $taxonomy_type, $taxonomies_available ) )
 					{ 
@@ -409,7 +412,7 @@ class Maxson_Sidebar
 
 				$author_id = $post_obj->data->ID;
 
-				if ( isset( $author_id ) && ! empty( $authors_available ) )
+				if( isset( $author_id ) && ! empty( $authors_available ) )
 				{ 
 					$author = get_userdata( $author_id );
 					$author_roles = $author->roles;
@@ -473,9 +476,9 @@ class Maxson_Sidebar
 
 
 		// Process sidebar sorcery
-		if ( ! empty( $sidebar_find_meta ) && ! empty( $sidebar_replace_meta ) )
+		if( ! empty( $sidebar_find_meta ) && ! empty( $sidebar_replace_meta ) )
 		{
-			if ( isset( $_wp_sidebars_widgets[ $sidebar_find_meta ] ) )
+			if( isset( $_wp_sidebars_widgets[ $sidebar_find_meta ] ) )
 			{ 
 				$_wp_sidebars_widgets[ $sidebar_find_meta ] = $_wp_sidebars_widgets[ $sidebar_replace_meta ];
 
@@ -487,38 +490,39 @@ class Maxson_Sidebar
 	/**
 	 * Modify sidebar name
 	 * 
-	 * @return 		void
-	 *
 	 * @since 		1.0
+	 *
+	 * @param       string $name Name of sidebar to clean
+	 * @return 		void
 	 */
 
-	public function clean_sidebar_name( $name )
+	public function clean_sidebar_title( $name )
 	{
 		global $wp_registered_sidebars;
 
-		if ( empty( $wp_registered_sidebars ) )
+		if( empty( $wp_registered_sidebars ) )
 			return $name;
 
 		$taken    = array();
 		$sidebars = $this->get_sidebars();
 
-		foreach ( $wp_registered_sidebars as $sidebar )
+		foreach( $wp_registered_sidebars as $sidebar )
 		{
 			$taken[] = $sidebar['name'];
 
 		} // endforeach
 
-		if ( empty( $sidebars ) )
+		if( empty( $sidebars ) )
 			$sidebars = array();
 
 		$taken = array_merge( $taken, $sidebars );
 
-		if ( in_array( $name, $taken ) )
+		if( in_array( $name, $taken ) )
 		{
 			$counter  = substr( $name, -1 );
 			$new_name = '';
 
-			if ( ! is_numeric( $counter ) )
+			if( ! is_numeric( $counter ) )
 			{ 
 				$new_name = $name . ' 1';
 
@@ -528,7 +532,7 @@ class Maxson_Sidebar
 
 			} // endif
 
-			$name = $this->clean_sidebar_name( $new_name );
+			$name = $this->clean_sidebar_title( $new_name );
 
 		} // endif
 
@@ -569,7 +573,7 @@ class Maxson_Sidebar
 	 */
 
 	public function register_post_type()
-	{
+	{ 
 		$single_slug   = apply_filters( 'maxson_sidebar_single_slug', 'sidebar' );
 		$archive_slug  = apply_filters( 'maxson_sidebar_archive_slug', 'sidebars' );
 		$menu_position = apply_filters( 'maxson_sidebar_menu_position', '' );
@@ -636,9 +640,9 @@ class Maxson_Sidebar
 			'after_title' 	=> '</h3>'
 		);
 		
-		if ( ! empty( $the_sidebars ) && count( $the_sidebars ) > 0 )
+		if( ! empty( $the_sidebars ) && count( $the_sidebars ) > 0 )
 		{ 
-			foreach ( $the_sidebars as $sidebar => $sidebar_data )
+			foreach( $the_sidebars as $sidebar => $sidebar_data )
 			{ 
 				$sidebar_id          = $sidebar_data->ID;
 				$sidebar_name        = $sidebar_data->post_name;
@@ -651,7 +655,7 @@ class Maxson_Sidebar
 
 				$args = apply_filters( 'maxson_sidebar_generated_args', $args, $sidebar_name, $sidebar_title );
 
-				if ( is_admin() )
+				if( is_admin() )
 				{ 
 					$args['class'] = 'generated';
 
@@ -751,7 +755,7 @@ class Maxson_Sidebar
 	{ 
 		global $pagenow;
 
-		if ( 'widgets.php' == $pagenow )
+		if( 'widgets.php' == $pagenow )
 		{ 
 			if( isset( $_GET['sidebar'] ) && $_GET['sidebar'] == 'added' )
 			{ 
@@ -811,6 +815,49 @@ class Maxson_Sidebar
 
 
 	/**
+	 * Insert custom sidebars
+	 * 
+	 * @since 		1.4
+	 * 
+	 * @return 		array|void 
+	 */
+
+	public function insert_sidebar( $title = '', $description = '' )
+	{ 
+		if( empty( $title ) )
+			return false;
+
+		$post_title = $this->clean_sidebar_title( $title );
+		$post_slug  = sanitize_title( $post_title );
+
+		$post_data = array( 
+			'post_status' => 'publish',
+			'post_type'   => $this->post_type,
+			'post_title'  => $post_title,
+			'post_slug'   => $post_slug
+		);
+
+		if( ! empty( $description ) )
+			$post_data['post_content'] = $description;
+
+		if( $sidebar_id = wp_insert_post( $post_data ) )
+		{ 
+			if( current_theme_supports( 'post-formats' ) )
+				set_post_format( $sidebar_id, 'standard' );
+
+			return array( 
+				'id'    => $sidebar_id, 
+				'slug'  => $post_slug, 
+				'title' => $post_title
+			);
+
+		} // endif
+
+		return false;
+	}
+
+
+	/**
 	 * Add custom sidebars
 	 * 
 	 * @since 		1.0
@@ -820,31 +867,18 @@ class Maxson_Sidebar
 
 	public function add_sidebar()
 	{ 
-		if ( ! empty( $_POST['maxson-generator-sidebar-title'] ) )
+		if( ! empty( $_POST['maxson-generator-sidebar-title'] ) )
 		{
 			$title = sanitize_text_field( $_POST['maxson-generator-sidebar-title'] );
 
-			$post_title = (string) $this->clean_sidebar_name( $title );
-			$post_slug  = sanitize_title( $post_title );
-			$post_data  = array( 
-				'post_title'  => $post_title,
-				'post_status' => 'publish',
-				'post_type'   => $this->post_type,
-				'post_slug'   => $post_slug
-			);
+			if( ! empty( $_POST['maxson-generator-sidebar-desc'] ) )
+				$description = sanitize_text_field( $_POST['maxson-generator-sidebar-desc'] );
 
-			if ( ! empty( $_POST['maxson-generator-sidebar-desc'] ) )
-				$post_data['post_content'] = sanitize_text_field( $_POST['maxson-generator-sidebar-desc'] );
+			$insert_sidebar = $this->insert_sidebar( $title, $description );
 
-			if( $sidebar_id = wp_insert_post( $post_data ) )
+			if( $insert_sidebar )
 			{ 
-				if( current_theme_supports( 'post-formats' ) )
-					set_post_format( $sidebar_id, 'standard' );
-
-				wp_redirect( add_query_arg( array( 
-					'sidebar' => 'added'
-				), admin_url( 'widgets.php' ) ) );
-
+				wp_redirect( add_query_arg( array( 'sidebar' => 'added' ), admin_url( 'widgets.php' ) ) );
 				die();
 
 			} // endif
@@ -862,45 +896,30 @@ class Maxson_Sidebar
 
 	public function ajax_add_sidebar()
 	{ 
-		if ( ! wp_verify_nonce( $_POST['nonce'], 'maxson-add-sidebar-nonce' ) )
+		if( ! wp_verify_nonce( $_POST['nonce'], 'maxson-add-sidebar-nonce' ) )
 		{ 
 			wp_send_json_error( array( 
-				'message' => sprintf( '<p>%s</p>', __( 'Oops! You do not have permission to do that action.', 'maxson' ) )
+				'message' => __( 'Oops! You do not have permission to do that action.', 'maxson' )
 			) );
 
-		} else if ( isset( $_POST['title'] ) && ! empty( $_POST['title'] ) )
+		} else if( isset( $_POST['title'] ) && ! empty( $_POST['title'] ) )
 		{ 
 			$title = sanitize_text_field( $_POST['title'] );
 
-			$post_title = (string) $this->clean_sidebar_name( $title );
-			$post_slug  = sanitize_title( $post_title );
-			$post_data  = array( 
-				'post_title'  => $post_title,
-				'post_status' => 'publish',
-				'post_type'   => $this->post_type,
-				'post_slug'   => $post_slug
-			);
-
-
-			if ( isset( $_POST['description'] ) && ! empty( $_POST['description'] ) )
-			{
+			if( isset( $_POST['description'] ) && ! empty( $_POST['description'] ) )
 				$description = sanitize_text_field( $_POST['description'] );
 
-				$post_data['post_content'] = $description;
+			$new_sidebar = $this->insert_sidebar( $title, $description );
 
-			} // endif
-
-
-			if( $sidebar_id = wp_insert_post( $post_data ) )
+			if( $new_sidebar )
 			{ 
-				if( current_theme_supports( 'post-formats' ) )
-					set_post_format( $sidebar_id, 'standard' );
-
 				wp_send_json_success( array( 
-					'sidebar_id'    => $sidebar_id, 
-					'sidebar_slug'  => $post_slug, 
-					'sidebar_title' => $post_title
+					'message' => __( 'Success! A new sidebar has been generated.', 'maxson' ),
+					'id'      => $new_sidebar['id'], 
+					'slug'    => $new_sidebar['slug'], 
+					'title'   => $new_sidebar['title']
 				) );
+
 			} // endif
 		} // endif
 	}
@@ -916,13 +935,13 @@ class Maxson_Sidebar
 
 	public function ajax_delete_sidebar()
 	{ 
-		if ( ! wp_verify_nonce( $_POST['nonce'], 'maxson-delete-sidebar-nonce' ) )
+		if( ! wp_verify_nonce( $_POST['nonce'], 'maxson-delete-sidebar-nonce' ) )
 		{ 
 			wp_send_json_error( array( 
 				'message' => sprintf( '<p>%s</p>', __( 'Oops! You do not have permission to do that action.', 'maxson' ) )
 			) );
 
-		} else if ( isset( $_POST['slug'] ) && ! empty( $_POST['slug'] ) )
+		} else if( isset( $_POST['slug'] ) && ! empty( $_POST['slug'] ) )
 		{ 
 			$sidebar_slug = trim( stripslashes( $_POST['slug'] ) );
 
@@ -938,15 +957,15 @@ class Maxson_Sidebar
 				wp_delete_post( $all_sidebars[0]->ID, true );
 
 				wp_send_json_success( array( 
-					'slug'    => $_POST['slug'],
-					'message' => __( 'Sidebar deleted.', 'maxson' )
+					'message' => __( 'Sidebar deleted.', 'maxson' ), 
+					'slug'    => $sidebar_slug
 				) );
 
 			} else
 			{ 
 				wp_send_json_error( array( 
-					'slug'    => $_POST['slug'],
-					'message' => __( 'Sidebar does not exist.', 'maxson' )
+					'message' => __( 'Sidebar does not exist.', 'maxson' ), 
+					'slug'    => $sidebar_slug
 				) );
 
 			} // endif
@@ -973,13 +992,12 @@ class Maxson_Sidebar
 
 	public function tinymce_sidebar()
 	{ 
-		if ( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) )
+		if( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) )
 		{ 
-
 			if( ! apply_filters( 'maxson_sidebar_shortcode', true ) )
 				return false;
 
-			if ( ! apply_filters( 'maxson_sidebar_tinymce_dropdown', true ) )
+			if( ! apply_filters( 'maxson_sidebar_tinymce_dropdown', true ) )
 				return false;
 
 			if( 'true' == get_user_option( 'rich_editing' ) )
@@ -1045,6 +1063,4 @@ class Maxson_Sidebar
 		return get_maxson_sidebar( $id );
 	}
 
-} // endclass
-
-?>
+} // endclass ?>
