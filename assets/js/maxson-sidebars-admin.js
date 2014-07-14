@@ -86,8 +86,7 @@ function initMaxsonSidebarGenerator(){
 				},
 				success: function(response){ 
 					if(response.success == true){ 
-						jQuery('#maxson-sidebar-deleted-message').removeClass('hidden');
-						jQuery('#maxson-sidebar-deleted-message').siblings('.updated').remove();
+						jQuery('#maxson-sidebar-deleted-message').removeClass('hidden').siblings('.updated').remove();
 
 						widget.slideUp(200, function(){ 
 							// Delete all widgets inside
@@ -153,12 +152,10 @@ function initMaxsonSidebarMetabox(){
 			data: $data,
 
 			success: function(response){ 
-				console.log( response );
-
 				if(response.success == true){ 
 					widget_title.val('');
 					widget_desc.val('');
-					jQuery('#sidebar_replace').append( '<option value="' + response.data.sidebar_slug + '">' + response.data.sidebar_title + '</option>' );
+					jQuery('#sidebar_replace').append( '<option value="' + response.data.slug + '">' + response.data.title + '</option>' );
 				} // endif
 			}
 		});
