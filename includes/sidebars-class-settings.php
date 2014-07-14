@@ -20,8 +20,6 @@ class Maxson_Sidebar_Settings
 	 * Testimonial setting variables
 	 * 
 	 * @since 		1.0
-	 * 
-	 * @return		void
 	 */
 
 	public $version;
@@ -104,10 +102,12 @@ class Maxson_Sidebar_Settings
 		$remove_buddypress_roles  = array();
 		$remove_woocommerce_roles = array();
 		
-		if( true === apply_filters( 'maxson_sidebar_exclude_woocommerce_roles', true ) )
+		$active_plugins = get_option( 'active_plugins' );
+
+		if( apply_filters( 'maxson_sidebar_exclude_woocommerce_roles', false ) )
 			$remove_woocommerce_roles = array( 'shop_manager', 'customer' );
 
-		if( true === apply_filters( 'maxson_sidebar_exclude_buddypress_roles', true ) )
+		if( apply_filters( 'maxson_sidebar_exclude_buddypress_roles', false ) )
 			$remove_buddypress_roles = array( 'member', 'moderator' );
 
 		$excluded_user_roles = array_merge( $remove_woocommerce_roles, $remove_buddypress_roles );
@@ -198,7 +198,7 @@ class Maxson_Sidebar_Settings
 
 			foreach( $post_types as $post_type )
 			{ 
-				$save_post_types[$post_type] = 1;
+				$save_post_types[] = $post_type;
 
 			} // endforeach
 
@@ -215,7 +215,7 @@ class Maxson_Sidebar_Settings
 
 			foreach( $taxonomies as $taxonomy )
 			{ 
-				$save_taxonomies[$taxonomy] = 1;
+				$save_taxonomies[] = $taxonomy;
 
 			} // endforeach
 
@@ -229,7 +229,7 @@ class Maxson_Sidebar_Settings
 
 			foreach( $user_roles as $user_role )
 			{ 
-				$save_user_roles[$user_role] = 1;
+				$save_user_roles[] = $user_role;
 
 			} // endforeach
 
@@ -276,9 +276,7 @@ class Maxson_Sidebar_Settings
 
 			<form id="testimonials_settings" action="options.php" method="post">
 				<?php settings_fields( 'sidebar_settings' ); ?>
-
 				<?php do_settings_sections( 'sidebar_settings' ); ?>
-
 				<?php submit_button( __( 'Save Changes', 'maxson' ), 'primary', 'sidebar_settings_submit', true ); ?>
 			</form>
 		</div><!-- .wrap -->
