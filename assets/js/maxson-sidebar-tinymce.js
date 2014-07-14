@@ -1,4 +1,3 @@
-/*global tinyMCE, tinymce*/
 ;(function(){
 "use strict";   
  
@@ -35,6 +34,7 @@
 						editor.insertContent( '[maxson_sidebar' + ' id="' + value + '"]' );
 
 						return false;
+
 					}, onPostRender : function(){ 
 						this.addClass('maxson-sidebar');
 					}
